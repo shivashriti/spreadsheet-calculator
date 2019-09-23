@@ -17,7 +17,7 @@ should produce the following output file:
 
 ### Solution
 
-#### Design
+### Design
 **Spreadsheet Models:**
 - Cell: To represent the individual entity that holds the expression to be evaluated
 - Spreadsheet: Two dimensional Array of cells. Array has been used for faster (constant time) look-ups and updates.
@@ -30,7 +30,7 @@ should produce the following output file:
 - The Main file Calculator uses all above to read input, create & evaluate spreadsheet and then prepares the output.
 
 
-#### Steps
+### Steps
 - Create a spreadsheet of the given data. This will create all cells and include the reference to spreadsheet for look-ups, the expression, result to be calculated, a flag to indicate whether it is calculated and the count of how many times it has been visited for evaluation.
 - Once the spreadsheet is created from csv, start calculating it from 1st cell and continue till last.
 - If Cell depends on result of some other cell, recursively calculate it, toggle *isEvaluated* flag to true and use its result.
@@ -45,14 +45,14 @@ should produce the following output file:
 - By default the calculator app reads data from **inputfile.csv** and writes to **outputfile.csv**.
     
 
-#### Testing
+### Testing
 Unit test cases have been added to check that
 - calculator evaluates all cells properly
 - detects cyclic dependencies and report in error messages
 - detects non-existing cell references in expression and report in error messages
 
 
-#### Build Instructions
+### Build Instructions
 **Execute App with jar**
 
 `java –jar spreasheet.jar inputfile.csv outputfile.csv`
@@ -80,14 +80,14 @@ Unit test cases have been added to check that
     `~/myWorkspace/spreadsheet 👉 $sbt test`
 
 
-#### Packaging Instructions
+### Packaging Instructions
 - To create a jar for the app, assembly plugin has been used. Simply run `sbt assembly` on the root of the project. It uses main class *Calculator* to launch the created jar.
 
 `~/myWorkspace/spreadsheet 👉 $sbt assembly`
 
 *This will create spreadsheet.jar in spreadsheet/target/scala-2.12/*
 
-#### Further Improvements
+### Further Improvements
 - For performance improvement, multi-threading can be used during spreadsheet creation and evaluation. One way to achieve this easily is using *io* from **cats.effect** library. The approach is to maintain two **ExecutionContext**s, one default ExecutionContext for the main Calculator and one custom ExecutionContext with increased number of threads (pre-configured) for longer tasks like evaluation of cells. The idea is to shift the ExecutionContext to custom while starting evaluation and as soon as it is done, shift to normal context using `io.shift`.
 - For space usage reduction, one can use **LinkedHashMap** for spreadsheet instead of Array. This gives flexibility of having bigger spreadsheets in separate chunks while still maintaining constant time access. However, there may be overhead of maintaining the 2D structure of spreadsheet separately.
 - As an alternate way to catch cyclic dependencies, depth-first approach can be used with backtracking. The idea is to start with a cell that has fixed value. Treat this a node of graph and keep adding dependent nodes while checking for any cycles formed in graph. This approach may increase implementation complexity and space requirements.
